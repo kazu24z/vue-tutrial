@@ -4,8 +4,8 @@ var vm = new Vue({
     message: ''
   },
   methods: {
-    showMessage: function() {
-      this.message = "ボタン押したな!!!!（怒）"
+    showMessage: function(message) {
+      alert(message)
     }
   }
 })
