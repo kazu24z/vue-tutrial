@@ -1,10 +1,11 @@
 var vm = new Vue({
-  el: '#event-handling1',
+  el: '#event-handling',
   data: {
     message: ''
   },
   methods: {
-    showMessage: function(message) {
+    warn: function (message) {
+      // ネイティブイベントを参照しています
       alert(message)
     }
   }

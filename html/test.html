@@ -7,13 +7,11 @@
 </head>
 <body>
 
-
-  <div id="event-handling1">
-    <p>{{ message }}</p>
-    <button v-on:click="showMessage('押すなって言ったやろ！！！')">絶対押すなよ！！</button>
-  </div>
-
-
+<div id="event-handling">
+  <button  v-on:click.once="warn('Form cannot be submitted yet.')">
+    Submit
+  </button>
+</div>
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
   <script src="../js/test.js"></script>
