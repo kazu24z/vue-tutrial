@@ -2,7 +2,8 @@
   <div id="todo-table">
     <table>
       <thead>
-        <tr>
+        <tr v-if="todos.length===0"></tr>
+        <tr v-else>
           <th>Done</th>
           <th>ID</th>
           <th>Title</th>
@@ -10,33 +11,34 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in todos" v-bind:key="item.id">
+        <tr v-if="todos.length===0"><p>No Task</p></tr>
+        <tr v-else v-for="item in todos" v-bind:key="item.id">
           <!-- チェックボックス -->
           <td><input type="checkbox" v-model="item.isDone"></td>
           <!-- ID -->
           <td>{{ item.id +1 }}</td>
           <!-- タスクタイトル -->
           <td v-bind:class="{done: item.isDone}">
-            <div v-if="item.isEditing"><input ref="saveTitle"></div>
+            <div v-if="item.isEditing"><input ref="saveTitle" v-bind:value="item.title"></div>
             <div v-else>{{ item.title }}</div>
           </td>
           <!-- 期日 -->
           <td>{{ item.date }}</td>
 
           <!-- 編集 -->
-          <td>
+          <td v-if="!item.isEditing">
             <button class="edit" v-on:click="handleEdit(item)">Edit</button>
           </td>
           <!-- 保存 -->
-          <td>
+          <td v-else>
             <button class="save" v-on:click="handleSave(item)">Save</button>
           </td>
           <!-- 削除 -->
-          <td>
+          <td v-if="!item.isEditing">
             <button class="delete" v-on:click="handleDelete(item)">Delete</button>
           </td>          
           <!-- 編集キャンセル -->
-          <td>
+          <td v-else>
             <button class="cancel" v-on:click="handleCancel(item)">Cancel</button>
           </td>
         </tr>
@@ -47,6 +49,7 @@
 
 <script>
 export default {
+  name: 'TodoTable',
   props: {
     todos: Array
   },
