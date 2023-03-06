@@ -1,106 +1,64 @@
 <template>
   <div
     id="app"
-    class="small-container"
+    class="#"
   >
-    <h1>Employees</h1>
-
-    <employee-form @add:employee="addEmployee" />
-    <employee-table
-      :employees="employees"
-      @delete:employee="deleteEmployee"
-      @edit:employee="editEmployee"
+    <h1>ToDoアプリ</h1>
+    <!-- @子側のemitキーワード="親側のメソッド" -->
+    <todo-form @add-todo="addTodo"/>
+    <todo-table 
+      @edit-todo="editTodo"
+      @save-todo="saveTodo"
+      @delete-todo="deleteTodo" 
+      v-bind:todos="todos"
     />
   </div>
 </template>
 
 <script>
-import EmployeeTable from '@/components/EmployeeTable.vue'
-import EmployeeForm from '@/components/EmployeeForm.vue'
+import TodoForm from './components/TodoForm.vue'
+import TodoTable from './components/TodoTable.vue'
 
 export default {
   name: "app",
   components: {
-    EmployeeTable,
-    EmployeeForm,
+    TodoForm,
+    TodoTable
   },
   data() {
     return {
-      employees: []
+      todos: []
     }
   },
-
-  mounted() {
-    this.getEmployees()
-  },
-
   methods: {
-    async getEmployees() {
-      try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/users')
-        const data = await response.json()
-        this.employees = data
-      } catch (error) {
-        console.error(error)
+    addTodo: function(todo) {
+      if (!todo.title || !todo.date) {
+        return  
       }
+      this.todos.push({
+        id: this.todos.length === 0? 0: this.todos.slice(-1)[0].id +1 ,
+        title: todo.title,
+        date: todo.date,
+        isDone: false,
+        isEditing: false
+      })
+      todo.title = ''
+      todo.date = ''
     },
+    editTodo: function(item) {
+      console.log(item)
+    },
+    saveTodo: function(item) {
+      this.todos[item.id] = item
+      //this.todos.splice(item.id, 1, item)
+      console.log(this.todos[item.id])
 
-    async addEmployee(employee) {
-      try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/users', {
-          method: 'POST',
-          body: JSON.stringify(employee),
-          headers: { "Content-type": "application/json; charset=UTF-8" }
-        })
-        const data = await response.json()
-        this.employees = [...this.employees, data]
-      } catch (error) {
-        console.error(error)
-      }
     },
-
-    async editEmployee(id, updatedEmployee) {
-      try {
-        const response = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
-          method: 'PUT',
-          body: JSON.stringify(updatedEmployee),
-          headers: { "Content-type": "application/json; charset=UTF-8" }
-        })
-        const data = await response.json()
-        this.employees = this.employees.map(employee => employee.id === id ? data : employee)
-      } catch (error) {
-        console.error(error)
-      }
-    },
-
-    async deleteEmployee(id) {
-      try {
-        await fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
-          method: 'DELETE'
-        })
-        this.employees = this.employees.filter(employee => employee.id !== id)
-      } catch (error) {
-        console.error(error)
-      }
-    },
-  },
-}
+    deleteTodo: function(item) {
+      var index = this.todos.indexOf(item)
+      this.todos.splice(index, 1)
+      console.log(this.todos)
+    }
+  }
+} 
 </script>
-
-<style>
-button {
-  background: #009435;
-  border: 1px solid #009435;
-}
-
-button:hover,
-button:active,
-button:focus {
-  background: #32a95d;
-  border: 1px solid #32a95d;
-}
-
-.small-container {
-  max-width: 680px;
-}
-</style>
